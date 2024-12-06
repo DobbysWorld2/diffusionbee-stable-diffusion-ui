@@ -61,6 +61,9 @@ sd_2x_shapes.update(shapes_params)
 
 add_aux_shapes(sd_2x_shapes)
 
+sd_xl_shapes = {}
+
+
 
 possible_model_shapes = {"SD_1x_float32": sd_1x_shapes , 
     "SD_1x_inpaint_float32": sd_1x_inpaint_shapes, 
@@ -149,3 +152,27 @@ def get_model_type(state_dict):
     return mname + "_" + c_dtype
 
 
+# Define the shapes for the SDXL model
+sd_xl_shapes = {
+    # Add the tensor shapes for the SDXL model here
+}
+
+# Add the SDXL shapes to the possible_model_shapes dictionary
+possible_model_shapes["SDXL_float32"] = sd_xl_shapes
+possible_model_shapes["SDXL_float16"] = sd_xl_shapes
+
+# Add a new entry for the SDXL model type in the ctdict_ids dictionary
+ctdict_ids["SDXL_float32"] = 1016
+ctdict_ids["SDXL_float16"] = 1017
+
+# Update the get_model_type() function to recognize the SDXL model type
+def get_model_type(state_dict):
+    if are_shapes_matching(state_dict, sd_xl_shapes):
+        shapes = sd_xl_shapes
+        mname = "SDXL"
+    elif are_shapes_matching(state_dict, sd_1x_shapes):
+        shapes = sd_1x_shapes
+        mname = "SD_1x"
+    # ... rest of the conditions
+
+    # ... rest of the function
